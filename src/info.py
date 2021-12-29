@@ -14,6 +14,7 @@ negHomes:set
 
 varsStatic = []
 vars = []
+varsCount:int
 
 varsStack = []
 

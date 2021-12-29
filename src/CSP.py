@@ -1,16 +1,30 @@
 import info
 
-def addPos(im, jm):
-    info.posHomes.add([im, jm])
+# def addPos(im, jm):
+#     info.posHomes.add([im, jm])
 
-def addNeg(im, jm):
-    info.negHomes.add([im, jm])
+# def addNeg(im, jm):
+#     info.negHomes.add([im, jm])
 
 def checkHomeType(im, jm):
-    if [im, jm] in info.posHomes:
-        return info.HomeType.POSITIVE
-    if [im, jm] in info.negHomes:
-        return info.HomeType.NEGETIVE
+    # if [im, jm] in info.posHomes:
+    #     return info.HomeType.POSITIVE
+    # if [im, jm] in info.negHomes:
+    #     return info.HomeType.NEGETIVE
+    # return info.HomeType.EMPTY
+    for var in info.varsStack[-1]:
+        if var["h1", 0] == im and var["h1", 1] == jm:
+            if var["value", 0] == 1:
+                return info.HomeType.POSITIVE
+            if var["value", 0] == 0:
+                return info.HomeType.NEGETIVE
+        
+        if var["h2", 0] == im and var["h2", 1] == jm:
+            if var["value", 1] == 1:
+                return info.HomeType.POSITIVE
+            if var["value", 1] == 0:
+                return info.HomeType.NEGETIVE
+    
     return info.HomeType.EMPTY
 
 def checkHome2(i1, j1):
@@ -79,8 +93,8 @@ def checkConstraint(im, jm):
 def assignmentComplete():
     cnt = 0
 
-    for var in info.vars:
-        if len(var["value"]) == 2:
+    for var in info.varsStack[-1]:
+        if var["value"] == 0:
             cnt += 1
 
     if cnt == sum(info.posRows):
@@ -88,11 +102,38 @@ def assignmentComplete():
     else:
         return False
 
-# def chooseVar():
+def chooseVar_MRV():
+    minVar = 0
+    minDCount = 10
 
+    for var in info.varsStack[-1]:
+        cntDomains = 3
+        for d in var["domain"]:
+            if d == 0:
+                cntDomains -= 1
+        
+        if cntDomains < minDCount:
+            minDCount = cntDomains
+            minVar = var
+
+    return minVar
+
+def findSpeceficVar(listSent, cnt):
+    for l in listSent:
+        if l["cnt"] == cnt:
+            return l
+
+def forwardChecking(var, cnt, l):
+    return l
 
 def backTracking():
     if assignmentComplete():
         return True
     
-    # varAnalyze = chooseVar()
+    varAnalyze = chooseVar_MRV()
+    for d in varAnalyze["domain"]:
+        newVars = info.varsStack[-1][:]
+        varChainging = findSpeceficVar(newVars, varAnalyze["cnt"])
+        varChainging["value"] = d
+        if checkConstraint(varAnalyze["h1", 0], varAnalyze["h2", 1]):
+            infrences = forwardChecking(varChainging , varChainging["cnt"], newVars)
