@@ -76,3 +76,23 @@ def checkConstraint(im, jm):
 
     return True
 
+def assignmentComplete():
+    cnt = 0
+
+    for var in info.vars:
+        if len(var["value"]) == 2:
+            cnt += 1
+
+    if cnt == sum(info.posRows):
+        return True
+    else:
+        return False
+
+# def chooseVar():
+
+
+def backTracking():
+    if assignmentComplete():
+        return True
+    
+    # varAnalyze = chooseVar()

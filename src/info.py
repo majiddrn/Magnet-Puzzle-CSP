@@ -12,6 +12,11 @@ gameMap:list
 posHomes:set
 negHomes:set
 
+varsStatic = []
+vars = []
+
+varsStack = []
+
 class HomeType(enumerate):
     POSITIVE = 1
     NEGETIVE = -1
