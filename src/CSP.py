@@ -13,7 +13,38 @@ def checkHomeType(im, jm):
         return info.HomeType.NEGETIVE
     return info.HomeType.EMPTY
 
-def checkConstraint(im, jm, home):
+def checkHome2(i1, j1):
+    if i1 != info.m - 1:
+        if info.gameMap[i1, j1] == info.gameMap[i1 + 1, j1]:
+            return [i1 + 1, j1]
+    
+    if j1 != info.n - 1:
+        if info.gameMap[i1, j1] == info.gameMap[i1, j1 + 1]:
+            return [i1, j1 + 1]
+
+def checkMagneticMatch(im, jm):
+    if im != 0:
+        if checkHomeType(im - 1, jm) == checkHomeType(im, jm):
+            return False
+
+    if im != info.m - 1:
+        if checkHomeType(im + 1, jm) == checkHomeType(im, jm):
+            return False
+
+    if jm != 0:
+        if checkHomeType(im, jm - 1) == checkHomeType(im, jm):
+            return False
+    
+    if jm != info.n - 1:
+        if checkHomeType(im, jm + 1) == checkHomeType(im, jm):
+            return False
+
+    return True
+
+def checkConstraint(im, jm):
+    home1 = [im, jm]
+    home2 = checkHome2(i1=im, j1=jm)
+
     posCountColumn = 0
     negCountColumn = 0
 
@@ -33,16 +64,15 @@ def checkConstraint(im, jm, home):
         
         if checkHomeType(im, j) == info.HomeType.NEGETIVE:
             negCountRow += 1
-    
-    homeType = checkHomeType(im, jm)
 
-    if homeType == info.HomeType.POSITIVE:
-        if posCountColumn > info.posColumns[jm] or posCountRow > info.posRows[im]:
-            return False
+    if posCountColumn > info.posColumns[jm] or posCountRow > info.posRows[im]:
+        return False
+        
+    if negCountColumn > info.negColumns[jm] or negCountRow > info.negRows[im]:
+        return False 
 
-    if homeType == info.HomeType.NEGETIVE:
-        if negCountColumn > info.negColumns[jm] or negCountRow > info.negRows[im]:
-            return False
-    
+    if not checkMagneticMatch(home1[0], home1[1]) or not checkMagneticMatch(home2[0], home2[1]):
+        return False
+
     return True
 
