@@ -26,3 +26,4 @@ class HomeType(enumerate):
     POSITIVE = "p"
     NEGETIVE = "n"
     EMPTY = "e"
+    NOT_ASSIGNED = "na"
