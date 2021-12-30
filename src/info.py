@@ -18,7 +18,11 @@ varsCount:int
 
 varsStack = []
 
+class HomeDir(enumerate):
+    VERTICAL = "v"
+    HORIZONTAL = "h"
+
 class HomeType(enumerate):
-    POSITIVE = 1
-    NEGETIVE = -1
-    EMPTY = 0
+    POSITIVE = "p"
+    NEGETIVE = "n"
+    EMPTY = "e"

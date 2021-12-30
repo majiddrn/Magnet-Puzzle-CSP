@@ -123,8 +123,103 @@ def findSpeceficVar(listSent, cnt):
         if l["cnt"] == cnt:
             return l
 
-def forwardChecking(var, cnt, l):
-    return l
+def findSpeceficVar_xy(listSent, im, jm):
+    for l in listSent:
+        if (l["h1", 0] == im and l["h1", 1] == jm) or (l["h2", 0] == im and l["h2", 1] == jm):
+            return l
+
+def forwardChecking(var, cnt, vars):
+    if var["value"] == info.HomeType.EMPTY:
+        return True
+
+    varLimited:dict
+
+    # if var["value", 0] == 1:
+    if var["h1", 0] != 0:
+        varLimited = findSpeceficVar_xy(vars, var["h1", 0] - 1, var["h1", 1])
+        if varLimited["h1", 0] == var["h1", 0] - 1 and varLimited["h1", 1] == var["h1", 1]:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+        if varLimited["h2", 0] == var["h2", 0] - 1 and varLimited["h2", 1] == var["h1", 1]:
+            varLimited["domain", 0] = 0
+
+    if var["h1", 0] != info.m - 1 and var["dir"] != info.HomeDir.VERTICAL:
+        varLimited = findSpeceficVar_xy(vars, var["h1", 0] + 1, var["h1", 1])
+        if varLimited["h1", 0] == var["h1", 0] + 1 and varLimited["h1", 1] == var["h1", 1]:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+        if varLimited["h2", 0] == var["h2", 0] + 1 and varLimited["h2", 1] == var["h1", 1]:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+
+    if var["h1", 1] != 0:
+        varLimited = findSpeceficVar_xy(vars, var["h1", 0], var["h1", 1] - 1)
+        if varLimited["h1", 1] == var["h1", 1] and varLimited["h1", 0] == var["h1", 0] - 1:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+        if varLimited["h2", 1] == var["h2", 1] and varLimited["h2", 0] == var["h1", 0] - 1:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+
+    if var["h1", 1] != 0 and var["dir"] != info.HomeDir.HORIZONTAL:
+        varLimited = findSpeceficVar_xy(vars, var["h1", 0], var["h1", 1] + 1)
+        if varLimited["h1", 1] == var["h1", 1] and varLimited["h1", 0] == var["h1", 0] + 1:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+        if varLimited["h2", 1] == var["h2", 1] and varLimited["h2", 1] == var["h1", 0] + 1:
+            if var["value", 0] == 1:
+                varLimited["domain", 1] = 0
+            else:
+                varLimited["domain", 0] = 0
+
+    for l in vars:
+        if l["domain", 0] == 0 and l["domain", 1] == 0 and l["domain", 2] == 0:
+            return False
+
+    return True
+        
+    # if var["value", 0] == 0:
+    #     if var["h1", 0] != 0:
+    #         varLimited = findSpeceficVar_xy(vars, var["h1", 0] - 1, var["h1", 1])
+    #         if varLimited["h1", 0] == var["h1", 0] - 1 and varLimited["h1", 1] == var["h1", 1]:
+    #             varLimited["domain", 1] = 0
+    #         if varLimited["h2", 0] == var["h2", 0] - 1 and varLimited["h2", 1] == var["h1", 1]:
+    #             varLimited["domain", 0] = 0
+
+    #     if var["h1", 0] != info.m - 1 and var["dir"] != info.HomeDir.VERTICAL:
+    #         varLimited = findSpeceficVar_xy(vars, var["h1", 0] + 1, var["h1", 1])
+    #         if varLimited["h1", 0] == var["h1", 0] + 1 and varLimited["h1", 1] == var["h1", 1]:
+    #             varLimited["domain", 1] = 0
+    #         if varLimited["h2", 0] == var["h2", 0] + 1 and varLimited["h2", 1] == var["h1", 1]:
+    #             varLimited["domain", 0] = 0
+
+    #     if var["h1", 1] != 0:
+    #         varLimited = findSpeceficVar_xy(vars, var["h1", 0], var["h1", 1] - 1)
+    #         if varLimited["h1", 1] == var["h1", 1] and varLimited["h1", 0] == var["h1", 0] - 1:
+    #             varLimited["domain", 1] = 0
+    #         if varLimited["h2", 1] == var["h2", 1] and varLimited["h2", 0] == var["h1", 0] - 1:
+    #             varLimited["domain", 0] = 0
+
+    #     if var["h1", 1] != 0 and var["dir"] != info.HomeDir.HORIZONTAL:
+    #         varLimited = findSpeceficVar_xy(vars, var["h1", 0], var["h1", 1] + 1)
+    #         if varLimited["h1", 1] == var["h1", 1] and varLimited["h1", 0] == var["h1", 0] + 1:
+    #             varLimited["domain", 1] = 0
+    #         if varLimited["h2", 1] == var["h2", 1] and varLimited["h2", 1] == var["h1", 0] + 1:
+    #             varLimited["domain", 0] = 0
+        
+
 
 def backTracking():
     if assignmentComplete():
@@ -132,8 +227,17 @@ def backTracking():
     
     varAnalyze = chooseVar_MRV()
     for d in varAnalyze["domain"]:
+        if d == -1: continue
+
         newVars = info.varsStack[-1][:]
         varChainging = findSpeceficVar(newVars, varAnalyze["cnt"])
         varChainging["value"] = d
         if checkConstraint(varAnalyze["h1", 0], varAnalyze["h2", 1]):
             infrences = forwardChecking(varChainging , varChainging["cnt"], newVars)
+            info.varsStack.append(vars)
+            if infrences:
+                resultBt = backTracking()
+                if resultBt:
+                    return resultBt
+        info.varsStack.pop()
+    return False
