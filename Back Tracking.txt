@@ -1,0 +1,25 @@
+if assignmentComplete():
+        return True
+    
+    varAnalyze = chooseVar_MRV()
+    for d in varAnalyze["domain"]:
+        if d == 0: continue
+
+        if type(d) is list:
+            dNew = d.copy()
+        else:
+            dNew = d
+
+        newVars = info.varsStack[-1][:]
+        varChainging = findSpeceficVar(newVars, varAnalyze["cnt"])
+        varChainging["value"] = dNew
+        if checkConstraint(varChainging["h1"][0], varChainging["h1"][1], newVars):
+            infrences = forwardChecking(varChainging , varChainging["cnt"], newVars)
+            info.varsStack.append(newVars)
+            if infrences:
+                resultBt = backTracking()
+                if resultBt:
+                    return resultBt
+        if len(info.varsStack) != 1:
+            info.varsStack.pop()
+    return False
