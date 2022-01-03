@@ -1,0 +1,181 @@
+# return True
+    # var["value"] = 0
+
+    posCountColumn = 0
+    negCountColumn = 0
+    
+    allMagnetColumn = True
+    allMagnetRow = True
+
+    posCountRow = 0
+    negCountRow = 0
+
+    print("------------------------------")
+    for i in range(info.m):
+        # print(i, jm)
+        anotherVar = findSpeceficVar_xy(l, i, jm)
+        homeType = checkHomeType(i, jm, l, anotherVar)
+
+        print(f"i:{i}, jm:{jm}", "-", homeType)
+
+        if homeType == info.HomeType.NOT_ASSIGNED or homeType == info.HomeType.EMPTY:
+            allMagnetColumn = False
+
+        if homeType == info.HomeType.POSITIVE:
+            posCountColumn += 1
+
+        if homeType == info.HomeType.NEGETIVE:
+            negCountColumn += 1
+    
+    for j in range(info.n):
+        # print(im, j)
+        anotherVar = findSpeceficVar_xy(l, im, j)
+        homeType = checkHomeType(im, j, l, anotherVar)
+
+        print(f"im:{im}, j:{j}", "-", homeType)
+
+        if homeType == info.HomeType.NOT_ASSIGNED or homeType == info.HomeType.EMPTY:
+            allMagnetRow = False
+
+        if homeType == info.HomeType.POSITIVE:
+            posCountRow += 1
+        
+        if homeType == info.HomeType.NEGETIVE:
+            negCountRow += 1
+
+
+    if allMagnetColumn:
+        if posCountColumn != info.posColumns[jm] or negCountColumn != info.negColumns[jm]: 
+            print(f"posCountColumn:{posCountColumn} - {info.posColumns[jm]}, negCountColumn:{negCountColumn} - {info.negColumns[jm]}")
+            print("-5")
+            print(var["cnt"])
+            printStack()
+            printMap()
+            print("---------------------------------------")
+            var["value"] = 0
+            return False
+    elif posCountColumn > info.posColumns[jm] or negCountColumn > info.negColumns[jm]:
+         # print("---------------------------------------")
+         print(f"posCountColumn:{posCountColumn} - {info.posColumns[jm]}, negCountColumn:{negCountColumn} - {info.negColumns[jm]}")
+         print("-1")
+         print(var["cnt"])
+         printStack()
+         printMap()
+         print("---------------------------------------")
+         var["value"] = 0
+         return False
+
+
+    if allMagnetRow:
+        if posCountRow != info.posRows[im] or negCountRow != info.negRows[im]: 
+            print(f"posCountColumn:{posCountColumn} - {info.posColumns[jm]}, negCountColumn:{negCountColumn} - {info.negColumns[jm]}")
+            print("-6")
+            print(var["cnt"])
+            printStack()
+            printMap()
+            print("---------------------------------------")
+            var["value"] = 0
+            return False
+    elif posCountRow > info.posRows[im] or negCountRow > info.negRows[im]:
+        # print("---------------------------------------")
+        print(f"posCountColumn:{posCountRow} - {info.posRows[im]}, negCountColumn:{negCountRow} - {info.negRows[im]}")
+        print("-2")
+        print(var["cnt"])
+        printStack()
+        printMap()
+        print("---------------------------------------")
+        var["value"] = 0
+        return False
+    
+    
+    
+
+    posCountColumn_h = 0
+    negCountColumn_h = 0
+    allMagnet_h = True
+
+    posCountRow_v = 0
+    negCountRow_v = 0
+    allMagnet_v = True
+
+    if var["dir"] == info.HomeDir.HORIZONTAL:
+        for i in range(info.m):
+            anotherVar = findSpeceficVar_xy(l, i, jm2)
+            homeType = checkHomeType(i, jm2, l, anotherVar)
+
+            if homeType == info.HomeType.NOT_ASSIGNED or homeType == info.HomeType.EMPTY:
+                allMagnet_h = False
+
+            if homeType == info.HomeType.POSITIVE:
+                posCountColumn_h += 1
+
+            if homeType == info.HomeType.NEGETIVE:
+                negCountColumn_h += 1
+
+        if posCountColumn_h > info.posColumns[jm2] or negCountColumn_h > info.negColumns[jm2]:
+            print(f"posCountColumn:{posCountColumn} - {info.posColumns[jm]}, negCountColumn:{negCountColumn} - {info.negColumns[jm]}")
+            print("-3")
+            print(var["cnt"])
+            printStack()
+            printMap()
+            print("---------------------------------------")
+            var["value"] = 0
+            return False
+
+    if var["dir"] == info.HomeDir.VERTICAL:
+        for j in range(info.n):
+            anotherVar = findSpeceficVar_xy(l, im2, j)
+            homeType = checkHomeType(im2, j, l, anotherVar)
+
+            if homeType == info.HomeType.NOT_ASSIGNED or homeType == info.HomeType.EMPTY:
+                allMagnet_v = False
+
+            if homeType == info.HomeType.POSITIVE:
+                posCountRow_v += 1
+
+            if homeType == info.HomeType.NEGETIVE:
+                negCountRow_v += 1
+
+        if allMagnetRow:
+            if posCountRow_v != info.posRows[im2] or negCountRow_v != info.negRows[im2]: 
+                print(f"posCountColumn:{posCountRow_v} - {info.posCountRow_v[jm2]}, negCountColumn:{posCountRow_v} - {info.posCountRow_v[jm2]}")
+                print("-7")
+                print(var["cnt"])
+                printStack()
+                printMap()
+                print("---------------------------------------")
+                var["value"] = 0
+                return False
+        elif posCountRow_v > info.posRows[im2] or negCountRow_v > info.negRows[im2]:
+            print(f"posCountColumn:{posCountColumn} - {info.posColumns[jm]}, negCountColumn:{negCountColumn} - {info.negColumns[jm]}")
+            print("-4")
+            print(var["cnt"])
+            printStack()
+            printMap()
+            print("---------------------------------------")
+            var["value"] = 0
+            return False
+
+    var["value"] = 0
+
+    # if posCountColumn < 0 or posCountRow < 0 or negCountColumn < 0 or negCountRow < 0:
+    #     print(f"\t\t\t   {posCountColumn} - {posCountColumn} ")
+    #     printStack()
+    #     # print("\t8888pos Column:", posCountColumn, info.posColumns[jm], "---- row:", posCountRow, info.posRows[im])
+    #     # print("--------------------------------")
+    #     # printStack()
+    #     var["value"] = 0
+    #     return False
+    #     # 
+    # if negCountColumn < 0 and negCountRow < 0:
+    #     # print(f"pos Column{jm}:", negCountColumn, info.negColumns[jm], f"---- row{im}:", negCountRow, info.negRows[im])
+    #     # print("--------------------------------")
+    #     # printStack()
+    #     var["value"] = 0
+    #     return False 
+    print("--------------------------------")
+
+    # print(home1)
+    # print(home2)
+
+    # printStack()

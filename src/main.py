@@ -1,4 +1,4 @@
-from CSP import backTracking
+import CSP
 import info
 
 #Getting input from the user:
@@ -10,6 +10,9 @@ info.negRows = list(map(int, input().split()))
 
 info.posColumns = list(map(int,input().split()))
 info.negColumns = list(map(int, input().split()))
+
+# print(f"pos Rows:{info.posRows} - negRows:{info.negRows}")
+# print(f"pos Columns:{info.posColumns} - negColumns:{info.negColumns}")
 
 info.gameMap = [[]]
 
@@ -39,19 +42,12 @@ for i in range(info.m):
                 info.varsStatic.append({"cnt": cnt, "h1": [i, j], "h2": [i, j + 1], "dir": info.HomeDir.HORIZONTAL
                                 , "domain": [[0, 1], [1, 0], info.HomeType.EMPTY], "dSize": 3, "value": 0})
                 cnt += 1
-        
+
+# exit(0)        
 
 varsCount = cnt
 
-# for l in info.vars:
-#     print(l)
-
-info.varsStack.append(info.vars)
-
-# for l in info.varsStack[-1]:
-#     print(l)
-
-print(backTracking())
+print(CSP.backTracking())
 
 finalGameMap = []
 
@@ -63,18 +59,22 @@ for i in range(info.m):
 for l in info.vars:
     print(l)
 
-for l in info.vars:
-    if type(l["value"]) is list:
-        cntStr = str(l["cnt"])
-        if l["value"][0] == 1:
-            finalGameMap[l["h1"][0]][l["h1"][1]] = cntStr + '+'
-            finalGameMap[l["h2"][0]][l["h2"][1]] = cntStr + '-'
 
-        if l["value"][0] == 0:
-            finalGameMap[l["h1"][0]][l["h1"][1]] = cntStr + '-'
-            finalGameMap[l["h2"][0]][l["h2"][1]] = cntStr + '+'
+def printMap():
+    for l in info.vars:
+        if type(l["value"]) is list:
+            cntStr = str(l["cnt"])
+            if l["value"][0] == 1:
+                finalGameMap[l["h1"][0]][l["h1"][1]] = cntStr + '+'
+                finalGameMap[l["h2"][0]][l["h2"][1]] = cntStr + '-'
 
-for i in range(info.m):
-    for j in range(info.n):
-        print(finalGameMap[i][j], end=' ')
-    print()
+            if l["value"][0] == 0:
+                finalGameMap[l["h1"][0]][l["h1"][1]] = cntStr + '-'
+                finalGameMap[l["h2"][0]][l["h2"][1]] = cntStr + '+'
+
+    for i in range(info.m):
+        for j in range(info.n):
+            print(f"\t{finalGameMap[i][j]}", end=' ')
+        print()
+
+printMap()

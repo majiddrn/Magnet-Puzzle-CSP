@@ -1,18 +1,22 @@
 m:int
 n:int
 
-gameMap:list
-
-vars = []
-varsStatic = []
-
 posRows:list
 negRows:list
 
 posColumns:list
 negColumns:list
 
-gameMapUpdate:list
+gameMap:list
+
+posHomes:set
+negHomes:set
+
+varsStatic = []
+vars = []
+varsCount:int
+
+varsStack = []
 
 class HomeDir(enumerate):
     VERTICAL = "v"

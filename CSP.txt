@@ -1,0 +1,528 @@
+from typing import final
+import info
+# import main
+
+def checkHomeType(im, jm, l, var):
+
+    # for var in l:
+        # print(var)
+
+    if var["value"] == info.HomeType.EMPTY:
+        return info.HomeType.EMPTY
+    
+    if var["value"] == 0:
+        return info.HomeType.NOT_ASSIGNED
+    
+    if type(var["value"]) is list:
+        if var["h1"] == [im, jm]: 
+            if var["value"] == [1, 0]:
+                return info.HomeType.POSITIVE
+            else:
+                return info.HomeType.NEGETIVE
+
+        if var["h2"] == [im, jm]:
+            if var["value"] == [0, 1]:
+                return info.HomeType.POSITIVE
+            else:
+                return info.HomeType.NEGETIVE
+    
+    return info.HomeType.EMPTY
+
+def checkHome2(i1, j1):
+    if i1 != info.m - 1:
+        if info.gameMap[i1][j1] == info.gameMap[i1 + 1][j1]:
+            return [i1 + 1, j1]
+    
+    if j1 != info.n - 1:
+        if info.gameMap[i1][j1] == info.gameMap[i1][j1 + 1]:
+            return [i1, j1 + 1]
+
+def checkMagneticMatch(vars, var):
+    varh1i = var["h1"][0]
+    varh1j = var["h1"][1]
+    varh2i = var["h2"][0]
+    varh2j = var["h2"][1]
+
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i == -1 and j == -1: continue
+            if var["dir"] == info.HomeDir.HORIZONTAL:
+                if i == 1 and j == -1: continue
+            if var["dir"] == info.HomeDir.VERTICAL:
+                if i == -1 and j == 1: continue
+
+            if varh1i + i < 0 or varh1j + j < 0: continue
+            if varh1i + i >= info.m or varh1j + j >= info.n: continue
+
+            if var["dir"] == info.HomeDir.HORIZONTAL:
+                # print("h")
+                if (i == -1 and j == 0) or (i == 0 and j == -1) or (i == 1 and j == 0):
+                    # print("h-h1")
+                    anotherVar = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+                    h1 = checkHomeType(varh1i + i, varh1j + j, vars, anotherVar)
+                    h2 = checkHomeType(varh1i, varh1j, vars, var)
+                    if h1 != info.HomeType.EMPTY and h1 != info.HomeType.NOT_ASSIGNED and h2 != info.HomeType.EMPTY and h2 != info.HomeType.NOT_ASSIGNED:
+                        if h1 == h2:
+                            print(var["cnt"])
+                            print("Magnetic Where 0")
+                            printStack()
+                            printMap()
+                            print("---------------------------------------")
+                            # printStack()
+                            # print(False)
+                            return False
+                
+                if (i == -1 and j == 1) or (i == 1 and j == 1):
+                    # print("h-h2")
+                    anotherVar = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+                    h1 = checkHomeType(varh1i + i, varh1j + j, vars, anotherVar)
+                    h2 = checkHomeType(varh2i, varh2j, vars, var)
+                    if h1 != info.HomeType.EMPTY and h1 != info.HomeType.NOT_ASSIGNED and h2 != info.HomeType.EMPTY and h2 != info.HomeType.NOT_ASSIGNED:    
+                        if h1 == h2:
+                            print(var["cnt"])
+                            print("Magnetic Where 1")
+                            printStack()
+                            printMap()
+                            print("---------------------------------------")
+                            # printStack()
+                            # print(False)
+                            return False
+
+            if var["dir"] == info.HomeDir.VERTICAL:
+                # print("v")
+                if (i == -1 and j == 0) or (i == 0 and j == 1) or (i == 0 and j == -1):
+                    # print("v-h1")
+                    anotherVar = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+                    h1 = checkHomeType(varh1i + i, varh1j + j, vars, anotherVar)
+                    h2 = checkHomeType(varh1i, varh1j, vars, var)
+                    if h1 != info.HomeType.EMPTY and h1 != info.HomeType.NOT_ASSIGNED and h2 != info.HomeType.EMPTY and h2 != info.HomeType.NOT_ASSIGNED:    
+                        if h1 == h2:
+                            print(var["cnt"])
+                            print("Magnetic Where 2")
+                            printStack()
+                            printMap()
+                            print("---------------------------------------")
+                            # printStack()
+                            # print(False)
+                            return False
+                
+                if (i == 1 and j == 1) or (i == 1 and j == -1):
+                    # print("v-h2")
+                    anotherVar = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+                    h1 = checkHomeType(varh1i + i, varh1j + j, vars, anotherVar)
+                    h2 = checkHomeType(varh2i, varh2j, vars, var)
+                    if h1 != info.HomeType.EMPTY and h1 != info.HomeType.NOT_ASSIGNED and h2 != info.HomeType.EMPTY and h2 != info.HomeType.NOT_ASSIGNED:    
+                        if h1 == h2:
+                            print(var["cnt"])
+                            print("Magnetic Where 3")
+                            printStack()
+                            printMap()
+                            print("---------------------------------------")
+                            # printStack()
+                            # print(False)
+                            return False
+
+    if var["dir"] == info.HomeDir.HORIZONTAL:
+        if varh2j + 1 < info.n:
+            anotherVar = findSpeceficVar_xy(vars, varh2i, varh2j + 1)
+            type1 = checkHomeType(varh2i, varh2j + 1, vars, anotherVar)
+            type2 = checkHomeType(varh2i, varh2j, vars, var)
+            # print(type1, type2)
+            if type1 != info.HomeType.EMPTY and type1 != info.HomeType.NOT_ASSIGNED and type2 != info.HomeType.EMPTY and type2 != info.HomeType.NOT_ASSIGNED:    
+                if type1 == type2:
+                    print(var["cnt"])
+                    print("Magnetic Where 4")
+                    printStack()
+                    printMap()
+                    print("---------------------------------------")
+                    return False
+
+    if var["dir"] == info.HomeDir.VERTICAL:
+        if varh2i + 1 < info.m:
+            anotherVar = findSpeceficVar_xy(vars, varh1i + 1, varh1j)
+            type1 = checkHomeType(varh2i + 1, varh2j, vars, anotherVar)
+            type2 = checkHomeType(varh2i, varh2j, vars, var)
+            # print(type1, type2)
+            if type1 != info.HomeType.EMPTY and type1 != info.HomeType.NOT_ASSIGNED and type2 != info.HomeType.EMPTY and type2 != info.HomeType.NOT_ASSIGNED:    
+                if type1 == type2:
+                    print(var["cnt"])
+                    print("Magnetic Where 5")
+                    printStack()
+                    printMap()
+                    print("---------------------------------------")
+                    return False
+
+    return True
+
+def findSpeceficVar_h1_xy(l, im, jm):
+    for var in l:
+        if var["h1"] == [im, jm]:
+            return var
+
+def checkConstraint(var, l, d):
+    im = var["h1"][0]
+    jm = var["h1"][1]
+
+    im2 = var["h2"][0]
+    jm2 = var["h2"][1]
+
+    var["value"] = d
+
+    # var["value"] = d
+
+    if not checkMagneticMatch(l, var):# or not checkMagneticMatch(home2[0], home2[1], l, var):
+        # printStack()
+        var["value"] = 0
+        return False
+
+    col_pos = 0
+    col_neg = 0
+    col_all_mag = True
+    col_pos_h = 0
+    col_neg_h = 0
+    col_all_mag_h = True
+
+    row_pos = 0
+    row_neg = 0
+    row_all_mag = True
+    row_pos_v = 0
+    row_neg_v = 0
+    row_all_mag_v = True
+
+    # checking column of h1
+    for i in range(info.m):
+        homeVar = findSpeceficVar_xy(l, i, jm)
+        homeType = checkHomeType(i, jm, l, homeVar)
+        # if homeType == info.HomeType.NOT_ASSIGNED:# or homeType == info.HomeType.EMPTY:
+        col_all_mag = False
+        if homeType == info.HomeType.POSITIVE:
+            col_pos += 1
+        if homeType == info.HomeType.NEGETIVE:
+            col_neg += 1
+
+    if col_pos > info.posColumns[jm] or col_neg > info.negColumns[jm]:
+        print("---------------------------------------")
+        print(-2)
+        print(f":{col_pos} - {info.posColumns[jm]}, :{col_neg} - {info.negColumns[jm]}")
+        print(var["cnt"])
+        printStack()
+        printMap()
+        print("---------------------------------------")
+        var["value"] = 0
+        return False
+
+    #checking row of h1
+    for j in range(info.n):
+        homeVar = findSpeceficVar_xy(l, im, j)
+        homeType = checkHomeType(im, j, l, homeVar)
+        # if homeType == info.HomeType.NOT_ASSIGNED:# or homeType == info.HomeType.EMPTY:
+        row_all_mag = False
+        if homeType == info.HomeType.POSITIVE:
+            row_pos += 1
+        if homeType == info.HomeType.NEGETIVE:
+            row_neg += 1
+
+    
+    if row_pos > info.posRows[im] or row_neg > info.negRows[im]:
+        print("---------------------------------------")
+        print(-4)
+        print(f":{row_pos} - {info.posRows[im]}, :{row_neg} - {info.negRows[im]}")
+        print(var["cnt"])
+        printStack()
+        printMap()
+        print("---------------------------------------")
+        var["value"] = 0
+        return False
+    
+    var["value"] = 0
+
+    return True
+
+def assignmentComplete():
+    allAssigned = True
+    p1 = False
+    p2 = False
+    magnetsCount = 0
+
+    mapCheck = []
+
+    for i in range(info.m):
+        mapCheck.append([])
+        for j in range(info.n):
+            mapCheck[i].append(0)
+
+    for var in info.vars:
+        if type(var["value"]) is list:
+            magnetsCount += 1
+            if var["value"] == [1, 0]:
+                mapCheck[var["h1"][0]][var["h1"][1]] = +1
+                mapCheck[var["h2"][0]][var["h2"][1]] = -1
+            elif var["value"] == [0, 1]:
+                mapCheck[var["h1"][0]][var["h1"][1]] = -1
+                mapCheck[var["h2"][0]][var["h2"][1]] = +1
+
+    if magnetsCount == sum(info.negRows):
+        return True
+    return False
+
+    # for i in range(info.m):
+    #     pos_row = info.posRows[i]
+    #     neg_row = info.negRows[i]
+    #     for j in range(info.n):
+    #         if mapCheck[i][j] == -1:
+    #             neg_row -= 1
+    #         if mapCheck[i][j] == +1:
+    #             pos_row -= 1
+
+    #     if pos_row != 0 or neg_row != 0: return False
+
+    # for j in range(info.n):
+    #     pos_col = info.posColumns[i]
+    #     neg_col = info.negColumns[i]
+    #     for j in range(info.n):
+    #         if mapCheck[i][j] == -1:
+    #             neg_col -= 1
+    #         if mapCheck[i][j] == +1:
+    #             pos_col -= 1
+    #     if pos_col != 0 or neg_col != 0: return False
+
+    # print(pos_col, pos_row)
+
+    # return True
+    # for var in info.vars:
+    #     if type(var["value"]) is int:
+    #         if var["value"] == 0:
+    #             allAssigned = False
+    # return allAssigned
+    
+    # for i in range(info.m):
+    #     cntPos = info.posRows[i]
+    #     cntNeg = info.negRows[i]
+    #     for j in range(info.n):
+    #         varHome = findSpeceficVar_xy(info.vars, i, j)
+    #         if varHome["value"] == info.HomeType.POSITIVE:
+    #             cntPos -= 1
+    #         if varHome["value"] == info.HomeType.NEGETIVE:
+    #             cntNeg -= 1
+        
+    #     if cntPos == 0 and cntNeg == 0: p1 = True
+
+    # for j in range(info.n):
+    #     cntPos = info.posColumns[j]
+    #     cntNeg = info.negColumns[j]
+    #     for i in range(info.m):
+    #         varHome = findSpeceficVar_xy(info.vars, i, j)
+    #         if varHome["value"] == info.HomeType.POSITIVE:
+    #             cntPos -= 1
+    #         if varHome["value"] == info.HomeType.NEGETIVE:
+    #             cntNeg -= 1
+        
+    #     if cntPos == 0 and cntNeg == 0: p2 = True
+
+    # print("********************************")
+    # print(cntPos, cntNeg, p1, p2)
+    # printMap()
+    # print("********************************")
+    # return allAssigned
+    # return (p1 and p2) and allAssigned
+
+def chooseVar_MRV():
+    minVar:dict = {"value": -1}
+    minDCount = 10
+
+    # for var in info.vars:
+    #     if type(var["value"]) is int:
+    #         if var["value"] == 0:
+    #             cntDomains = 3
+    #             for d in var["domain"]:
+    #                 if d == 0:
+    #                     cntDomains -= 1
+
+    #             if cntDomains < minDCount:
+    #                 minDCount = cntDomains
+    #                 minVar = var
+    
+    for l in (info.vars):
+        if l["value"] == 0:
+            # print(l["value"])
+            return l
+
+    # for var in info.vars:
+    #     if var["value"] != 0:
+    #         print(var["value"])
+    #         continue
+    #     if var["dSize"] < minDCount:
+    #         minDCount = var["dSize"]
+    #         minVar = var 
+
+    # print(minVar)
+    # print(minVar, minDCount)
+
+    return minVar
+
+def findSpeceficVar(listSent, cnt):
+    for l in listSent:
+        if l["cnt"] == cnt:
+            return l
+
+def findSpeceficVar_xy(listSent, im, jm):
+    for l in listSent:
+        if (l["h1"][0] == im and l["h1"][1] == jm) or (l["h2"][0] == im and l["h2"][1] == jm):
+            return l
+
+def forwardChecking(var, vars):
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i == -1 and j == -1: continue
+            if var["dir"] == info.HomeDir.HORIZONTAL:
+                if i == 1 and j == -1: continue
+            if var["dir"] == info.HomeDir.VERTICAL:
+                if i == -1 and j == 1: continue
+
+            varh1i = var["h1"][0]
+            varh1j = var["h1"][1]
+            varh2i = var["h2"][0]
+            varh2j = var["h2"][1]
+
+            if varh1i + i < 0 or varh1j + j < 0: continue
+            if varh1i + i >= info.m or varh1j + j >= info.n: continue
+
+            if (i == -1 and j == 0) or (i == 0 and j == -1):        # in this situation, only h1 effects
+                varLimitted = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+                if varLimitted["h1"][0] == varh1i + i and varLimitted["h1"][1] == varh1j + j:
+                    if var["value"] == [1, 0]:
+                        varLimitted["domain"][1] = 0
+                        varLimitted["dSize"] -= 1
+                    if var["value"] == [0, 1]:
+                        varLimitted["domain"][0] = 0
+                        varLimitted["dSize"] -= 1
+                
+                if varLimitted["h2"][0] == varh1i + i and varLimitted["h2"][1] == varh1j + j:
+                    if var["value"] == [1, 0]:
+                        varLimitted["domain"][0] = 0
+                        varLimitted["dSize"] -= 1
+                    if var["value"] == [0, 1]:
+                        varLimitted["domain"][1] = 0
+                        varLimitted["dSize"] -= 1
+            # else:
+            #     varLimitted = findSpeceficVar_xy(vars, varh1i + i, varh1j + j)
+            #     if varLimitted["h1"][0] == varh1i + i and varLimitted["h1"][1] == varh1j + j:
+            #         if var["value"] == [1, 0]:
+            #             varLimitted["domain"][0] = 0
+            #             varLimitted["dSize"] -= 1
+            #         if var["value"] == [0, 1]:
+            #             varLimitted["domain"][1] = 0
+            #             varLimitted["dSize"] -= 1
+                
+            #     if varLimitted["h2"][0] == varh1i + i and varLimitted["h2"][1] == varh1j + j:
+            #         if var["value"] == [1, 0]:
+            #             varLimitted["domain"][1] = 0
+            #             varLimitted["dSize"] -= 1
+            #         if var["value"] == [0, 1]:
+            #             varLimitted["domain"][0] = 0
+            #             varLimitted["dSize"] -= 1
+
+
+
+            # varLimitted = findSpeceficVar_xy(vars, i + , j)
+    for l in vars:
+        if l["domain"][2] != 'e':
+            if sum(l["domain"]) == 0:
+                # print("HERE_FALSE")
+                return False
+    
+    return True
+        
+def deleteFromDomain(var, v):
+    for i in range(len(var["domain"])):
+        if var["domain"][i] == v:
+            var["domain"][i] = 0
+
+def backingUpVars():
+    for i in range(len(info.vars)):
+        info.vars[i]["dSize"] = 3
+        info.vars[i]["domain"] = [[0, 1], [1, 0], info.HomeType.EMPTY]
+
+    # for i in range(len(info.vars)):
+    #     forwardChecking(info.vars[i], info.vars)
+
+def backTracking(depth=0):
+    # print(f"\t++++++++++  depth:{depth}  ++++++++++++")
+    # if depth == 1:
+    #     printStack() 
+    #     printMap()
+    if assignmentComplete():
+        return True
+    
+    varAnalyze = chooseVar_MRV()
+    # print(varAnalyze["value"])
+    for d in varAnalyze["domain"]:
+        if d == 0: continue
+
+        # varAnalyze["value"] = d
+        # if not type(varAnalyze["value"]) is int: continue
+        # if varAnalyze["value"] == -1: continue
+        # print(varAnalyze["value"])
+        
+        if checkConstraint(varAnalyze, info.vars, d):
+            # print("here")
+            varAnalyze["value"] = d
+            # infrences = forwardChecking(varAnalyze, info.vars)
+            # print('kuh',infrences)
+            # if infrences:
+            resultBt = backTracking(depth + 1)
+            if resultBt:
+                return resultBt
+        varAnalyze["value"] = 0
+        # backingUpVars()
+    return False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+finalGameMap = []
+
+def printMap():
+    for i in range(info.m):
+        finalGameMap.append([])
+        for j in range(info.n):
+            finalGameMap[i].append('\t*')
+
+    for l in info.vars:
+        if type(l["value"]) is list:
+            cntStr = str(l["cnt"])
+            if l["value"] == [1, 0]:
+                finalGameMap[l["h1"][0]][l["h1"][1]] = '\t' + cntStr + '+'
+                finalGameMap[l["h2"][0]][l["h2"][1]] = '\t' + cntStr + '-'
+
+            if l["value"] == [0, 1]:
+                finalGameMap[l["h1"][0]][l["h1"][1]] = '\t' + cntStr + '-'
+                finalGameMap[l["h2"][0]][l["h2"][1]] = '\t' + cntStr + '+'
+            
+        else:
+            if l["value"] == info.HomeType.EMPTY:
+                finalGameMap[l["h1"][0]][l["h1"][1]] = '\t' + '*'
+                finalGameMap[l["h2"][0]][l["h2"][1]] = '\t' + '*'
+
+    for i in range(info.m):
+        for j in range(info.n):
+            print(finalGameMap[i][j], end=' ')
+        print()
+
+# printMap()
+
+def printStack():
+    for l in info.vars:
+        print(l)
+    # print(len(info.vars))
