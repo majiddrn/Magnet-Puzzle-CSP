@@ -1,0 +1,204 @@
+im1 = var["h1"][0]
+    jm1 = var["h1"][1]
+    im2 = var["h2"][0]
+    jm2 = var["h2"][1]
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if not((i == 0 and j == 0) or i*j != 0):
+                
+                neghbor_i = im1 + i
+                neghbor_j = jm1 + j
+
+                if neghbor_i < info.m and neghbor_j < info.n and neghbor_i >= 0 and neghbor_j >= 0:
+                    neighbor, neighbor_h = findVarByPosition(neghbor_i, neghbor_j)
+                    if neighbor["cnt"] != var["cnt"] and neighbor["value"] == 0:
+                        # print(neighbor["cnt"], var["cnt"], neighbor["value"], var["value"], neighbor_h)
+                        if neighbor_h == "h1":
+                            if var["value"] == [1, 0]:
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0:
+                                    neighbor["dSize"] -= 1
+                            if var["value"] == [0, 1]:
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0:
+                                    neighbor["dSize"] -= 1
+
+                        if neighbor_h == "h2":
+                            if var["value"] == [1, 0]:
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0:
+                                    neighbor["dSize"] -= 1
+                            if var["value"] == [0, 1]:
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0:
+                                    neighbor["dSize"] -= 1
+                    # else:
+                    #     print("cntssss:\t", var["cnt"], neighbor["cnt"], neighbor["value"])
+
+                    neghbor_i = im2 + i
+                    neghbor_j = jm2 + j
+
+                    if neghbor_i < info.m and neghbor_j < info.n and neghbor_i >= 0 and neghbor_j >= 0:
+                        neighbor, neighbor_h = findVarByPosition(neghbor_i, neghbor_j)
+                        if neighbor["cnt"] != var["cnt"] and neighbor["value"] == 0:
+                            if neighbor_h == "h1":
+                                if var["value"] == [1, 0]:
+                                    neighbor["domain"][0] = 0
+                                    if neighbor["dSize"] >= 0:
+                                        neighbor["dSize"] -= 1
+                                if var["value"] == [0, 1]:
+                                    neighbor["domain"][1] = 0
+                                    if neighbor["dSize"] >= 0:
+                                        neighbor["dSize"] -= 1
+                            
+                            if neighbor_h == "h2":
+                                if var["value"] == [1, 0]:
+                                    neighbor["domain"][1] = 0
+                                    if neighbor["dSize"] >= 0:
+                                        neighbor["dSize"] -= 1
+                                if var["value"] == [0, 1]:
+                                    neighbor["domain"][0] = 0
+                                    if neighbor["dSize"] >= 0:
+                                        neighbor["dSize"] -= 1
+                        # else:
+                        #     print("cntssss:\t", var["cnt"], neighbor["cnt"], neighbor["value"])
+    for v in info.vars:
+        if v["dSize"] == 0:
+            # printMap()
+            # printStack()
+            return False
+    
+    return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     im1 = var["h1"][0]
+    jm1 = var["h1"][1]
+    im2 = var["h2"][0]
+    jm2 = var["h2"][1]
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if not((i == 0 and j == 0) or i*j != 0):
+                
+                neghbor_i = im1 + i
+                neghbor_j = jm1 + j
+
+                if neghbor_i < info.m and neghbor_j < info.n and neghbor_i >= 0 and neghbor_j >= 0:
+                    neighbor, neighbor_h = findVarByPosition(neghbor_i, neghbor_j)
+                    if neighbor["value"] == 0:
+
+                        if var["value"] == [1, 0]:
+                            if neighbor_h == "h1":
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(0)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+
+                            if neighbor_h == "h2":
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(1)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                        if var["value"] == [0, 1]:
+                            if neighbor_h == "h1":
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(2)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                            if neighbor_h == "h2":
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(3)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                neghbor_i = im2 + i
+                neghbor_j = jm2 + j
+
+                if neghbor_i < info.m and neghbor_j < info.n and neghbor_i >= 0 and neghbor_j >= 0:
+                    neighbor, neighbor_h = findVarByPosition(neghbor_i, neghbor_j)
+                    # if neighbor["value"] == 0: print("YES")
+                    if neighbor["value"] == 0:
+
+                        if var["value"] == [1, 0]:
+
+                            if neighbor_h == "h1":
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(4)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                            if neighbor_h == "h2":
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(5)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                        if var["value"] == [0, 1]:
+                            if neighbor_h == "h1":
+                                neighbor["domain"][1] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(6)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                            if neighbor_h == "h2":
+                                neighbor["domain"][0] = 0
+                                if neighbor["dSize"] >= 0: neighbor["dSize"] -= 1
+                                print("****----*****----*****----*****-----*********")
+                                print(7)
+                                print(f'neighbot: {neighbor["cnt"]} and itself: {var["cnt"]}')
+                                printMap()
+                                printStack()
+                                print("****----*****----*****----*****-----*********")
+
+                        # else:
+                        #     print("cntssss:\t", var["cnt"], neighbor["cnt"], neighbor["value"])
+    for v in info.vars:
+        if v["dSize"] == 0:
+            # printMap()
+            # printStack()
+            return False
+    
+    return True
