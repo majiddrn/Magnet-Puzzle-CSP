@@ -38,8 +38,18 @@ for i in range(4):
                                 , "domain": [[0, 1], [1, 0], info.HomeType.EMPTY], "dSize": 3, "value": 0})
                 cnt += 1
 
-storedDomains = CSP.storeDomains()
 i = 5
+storedDomains = CSP.storeDomains(CSP.getNeighbors(info.vars[i]))
+info.vars[i]["value"] = [1, 0]
+info.vars[i]["domain"][0] = 0
+print("CNT::", info.vars[i]["cnt"])
+CSP.forwardChecking_var(info.vars[i])
+print(CSP.calDSize(info.vars[i]))
+
+CSP.regetDomains(storedDomains)
+
+i = 2
+storedDomains = CSP.storeDomains(CSP.getNeighbors(info.vars[i]))
 info.vars[i]["value"] = [1, 0]
 info.vars[i]["domain"][0] = 0
 print("CNT::", info.vars[i]["cnt"])

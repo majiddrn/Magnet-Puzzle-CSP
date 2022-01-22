@@ -104,7 +104,7 @@ def isConsistent_magnetic(var, d):
                         # print("=++++++++++++++=")
                         # printGameMapUpdate()
                         # print("=++++++++++++++=")
-                        print(-1)
+                        # print(-1)
                         var["value"] = 0
                         updateGameMap()
                         return False
@@ -119,7 +119,7 @@ def isConsistent_magnetic(var, d):
                     h1t = info.gameMapUpdate[var["h2"][0]][var["h2"][1]]
                     h2t = info.gameMapUpdate[wherei][wherej]
                     if h1t == h2t and (h1t != 0 and h2t != 0):
-                        print(-2)
+                        # print(-2)
                         var["value"] = 0
                         updateGameMap()
                         return False
@@ -144,7 +144,7 @@ def isConsistent(var, d):
                     h1t = info.gameMapUpdate[var["h1"][0]][var["h1"][1]]
                     h2t = info.gameMapUpdate[wherei][wherej]
                     if h1t == h2t and (h1t != 0 and h2t != 0):
-                        print(-1)
+                        # print(-1)
                         var["value"] = 0
                         updateGameMap()
                         return False
@@ -157,7 +157,7 @@ def isConsistent(var, d):
                     h1t = info.gameMapUpdate[var["h2"][0]][var["h2"][1]]
                     h2t = info.gameMapUpdate[wherei][wherej]
                     if h1t == h2t and (h1t != 0 and h2t != 0):
-                        print(-2)
+                        # print(-2)
                         var["value"] = 0
                         updateGameMap()
                         return False
@@ -181,7 +181,7 @@ def isConsistent(var, d):
             negColCount += 1
     
     if posColCount > info.posColumns[var["h1"][1]] or negColCount > info.negColumns[var["h1"][1]]:
-        print(-3)
+        # print(-3)
         var["value"] = 0
         updateGameMap()
         return False
@@ -197,7 +197,7 @@ def isConsistent(var, d):
             negRowCount += 1
 
     if posRowCount > info.posRows[var["h1"][0]] or negRowCount > info.negRows[var["h1"][0]]:
-        print(-4)
+        # print(-4)
         var["value"] = 0
         updateGameMap()
         return False
@@ -214,7 +214,7 @@ def isConsistent(var, d):
                 negColCount_h += 1
         
         if posColCount_h > info.posColumns[var["h2"][1]] or negColCount_h > info.negColumns[var["h2"][1]]:
-            print(-5)
+            # print(-5)
             var["value"] = 0
             updateGameMap()
             return False
@@ -231,7 +231,7 @@ def isConsistent(var, d):
                 negRowCount_v += 1
 
         if posRowCount_v > info.posRows[var["h2"][0]] or negRowCount_v > info.negRows[var["h2"][0]]:
-            print(-6)
+            # print(-6)
             var["value"] = 0
             updateGameMap()
             return False
@@ -359,19 +359,26 @@ def revise(x_i, x_j):
 #*****************************************************************************************************
 
 def forwardChecking_var(var):
-    print("<<<<<<>>>>>>", var["cnt"])
+    # print("<<<<<<>>>>>>", var["cnt"])
+    goingToChange = []
+    count = 0
     if type(var["value"]) is list:
-        return True
+        # return True
         neighbors = getNeighbors(var)
         for i in range(len(neighbors)):
 
-            if not isConsistent_magnetic(neighbors[i], [1, 0]):
-                print(neighbors[i]["cnt"] ,"-", neighbors[i]["domain"][1])
-                neighbors[i]["domain"][1] = 0
+            if neighbors[i]["value"] == 0:
+                if not isConsistent_magnetic(neighbors[i], [1, 0]):
+                    # print(neighbors[i]["cnt"] ,"-", neighbors[i]["domain"][1])
+                    goingToChange.append({"domain": neighbors[i]["domain"].copy(), "cnt": neighbors[i]["cnt"]})
+                    neighbors[i]["domain"][1] = 0
+                    count += 1
 
-            if not isConsistent_magnetic(neighbors[i], [0, 1]):
-                print(neighbors[i]["cnt"], "-", neighbors[i]["domain"][0])
-                neighbors[i]["domain"][0] = 0
+                if not isConsistent_magnetic(neighbors[i], [0, 1]):
+                    # print(neighbors[i]["cnt"], "-", neighbors[i]["domain"][0])
+                    goingToChange.append({"domain": neighbors[i]["domain"].copy(), "cnt": neighbors[i]["cnt"]})
+                    neighbors[i]["domain"][0] = 0
+                    count += 1
             # print("M----")
             # printLimited()
             # print("M----")
@@ -379,32 +386,36 @@ def forwardChecking_var(var):
     
     # printMap()
     # printLimited()
-    print("<<<<<<>>>>>>", var["cnt"])
+    # print("<<<<<<>>>>>>", var["cnt"])
+    # print("MINE::", goingToChange, count)
 
     for v in info.vars:
-        if calDSize(v) == 0:
+        if calDSize(v) == 0 and v["cnt"] != var["cnt"]:
             # print("<<<<<<I'M FAILING>>>>>>", v["cnt"], var["cnt"])
             # printMap()
             # printStack()
+            # print("THIS ONE EMPTY::", v["domain"], v["cnt"], "VAR:", var["cnt"])
             # print("<<<<<<I'M FAILING>>>>>>", v["cnt"], var["cnt"])
-            return False
+            return False, goingToChange
 
-    return True
+    return True, goingToChange
                             
 #*****************************************************************************************************
 
-def storeDomains():
+def storeDomains(listToStore):
     lr = []
-    for var in info.vars:
-        lr.append({"cnt": var["cnt"], "domain": var["domain"].copy()})
+    for var in listToStore:
+        lr.append({"cnt": var["cnt"], "domain": var["domain"].copy(), "value": var["value"]})
 
     return lr
 
 #*****************************************************************************************************
 
 def regetDomains(stored):
-    for i in range(len(stored)):
-        info.vars[i]["domain"] = stored[i]["domain"].copy()
+    for i in range(len(stored)):    
+        for j in range(len(info.vars)):
+            if info.vars[j]["cnt"] == stored[i]["cnt"]:
+                info.vars[j]["domain"] = stored[i]["domain"].copy()
         # if stored[i]["domain"][0] == [0, 1]:
         #     info.vars[i]["domain"][0] = [0, 1]
         # else:
@@ -422,32 +433,34 @@ def regetDomains(stored):
 
 #*****************************************************************************************************
 
-def backTracking():
+def backTracking(depth=0):
     if isGoal():
         return True
     varAnalyze = chooseVar()
     if varAnalyze["value"] == -1: return False
     d = varAnalyze["domain"]
-    # if varAnalyze == None: return False
     for i in range(3):
         if d[i] == 0: continue
-        print(d[i])
-        domain = storeDomains()
+        # print(d[i])
+        # domain = storeDomains(info.vars)#getNeighbors(varAnalyze))
         if isConsistent(varAnalyze, d[i]):
+            value = d[i]
+            if type(d[i]) is list: value = d[i].copy()
+            
             varAnalyze["value"] = d[i]
             varAnalyze["domain"][i] = 0
             updateGameMap()
-            fc = forwardChecking_var(varAnalyze)
-            printGameMapUpdate()
+
+            domain = storeDomains(getNeighbors(varAnalyze))
+            fc, beforeChangeDomains = forwardChecking_var(varAnalyze)
             if fc:    
-                bt = backTracking()
+                bt = backTracking(depth+1)
                 if bt:
                     return bt
-        # varAnalyze["value"] = 0
-        varAnalyze["domain"][i] = varAnalyze["value"]
-        varAnalyze["value"] = 0
-        updateGameMap()
-        regetDomains(domain)
+            regetDomains(domain)
+            varAnalyze["value"] = 0
+            varAnalyze["domain"][i] = value
+            updateGameMap()
     return False
 
         
@@ -515,8 +528,7 @@ def printGameMapUpdate():
 
 def printLimited():
     for l in info.vars:
-        if calDSize(l) != 3:
-            print(l)
+        print(l)
 
 def printStack():
     for l in info.vars:
