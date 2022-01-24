@@ -1,0 +1,102 @@
+position_h1 = var["h1"]
+    position_h2 = var["h2"]
+    h1_bar:string
+    h2_bar:string
+    changed:set = set([])
+
+    # print("----")
+    # print("I'm", var)
+
+    if var["value"] == info.HomeType.EMPTY:
+        return True, []
+    
+    if var["value"] == [1, 0]:
+        h1_bar = 'pos'
+        h2_bar = 'neg'
+    
+    if var["value"] == [0, 1]:
+        h1_bar = 'neg'
+        h2_bar = 'pos'
+
+    #Checking the neighbors of home 'h1':
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i * j != 0: 
+                continue
+            if i == 0 and j == 0:
+                continue
+            if position_h1[0] + i >= info.m or position_h1[1] + j >= info.n:
+                continue
+            if position_h1[0] + i < 0 or position_h1[1] + j < 0:
+                continue
+
+            if (j == 1 and i == 0 and var["dir"] == info.HomeDir.HORIZONTAL) or (i == 1 and j == 0 and var["dir"] == info.HomeDir.VERTICAL):
+                continue
+
+            var_neighbor, neighbor_home_type = findVarByPosition(position_h1[0] + i, position_h1[1] + j)
+
+            if not isConsistent(var_neighbor, )
+
+            if var_neighbor["value"] == 0:
+                if h1_bar == 'pos':
+                    if neighbor_home_type == 'h1':
+                        var_neighbor["domain"][1] = 0
+                        changed.add(var_neighbor["cnt"])
+                        # print("limited", var_neighbor)
+                    if neighbor_home_type == 'h2':
+                        var_neighbor["domain"][0] = 0
+                        changed.add(var_neighbor["cnt"])
+                        # print("limited", var_neighbor)
+                if h1_bar == 'neg':
+                    if neighbor_home_type == 'h1':
+                        var_neighbor["domain"][0] = 0
+                        changed.add(var_neighbor["cnt"])
+                        # print("limited", var_neighbor)
+                    if neighbor_home_type == 'h2':
+                        var_neighbor["domain"][1] = 0
+                        changed.add(var_neighbor["cnt"])
+                        # print("limited", var_neighbor)
+                
+                if calDSize(var_neighbor) == 0:
+                    print("DSIZE IS ZERO")
+                    return False, []
+
+    Checking the neighbors of home 'h2':
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i * j != 0: 
+                continue
+            if i == 0 and j == 0:
+                continue
+            if position_h2[0] + i >= info.m or position_h2[1] + j >= info.n:
+                continue
+            if position_h2[0] + i < 0 or position_h2[1] + j < 0:
+                continue
+
+            if (j == -1 and i == 0 and var["dir"] == info.HomeDir.HORIZONTAL) or (i == -1 and j == 0 and var["dir"] == info.HomeDir.VERTICAL):
+                continue
+
+            var_neighbor, neighbor_home_type = findVarByPosition(position_h2[0] + i, position_h2[1] + j)
+
+            if var_neighbor["value"] == 0:
+                if not var_neighbor["cnt"] in changed:
+                    if h2_bar == 'pos':
+                        if neighbor_home_type == 'h1':
+                            var_neighbor["domain"][1] = 0
+                            # print("limited", var_neighbor)
+                        if neighbor_home_type == 'h2':
+                            var_neighbor["domain"][0] = 0
+                            # print("limited", var_neighbor)
+                    if h2_bar == 'neg':
+                        if neighbor_home_type == 'h1':
+                            var_neighbor["domain"][0] = 0
+                            # print("limited", var_neighbor)
+                        if neighbor_home_type == 'h2':
+                            var_neighbor["domain"][1] = 0
+                            # print("limited", var_neighbor)
+                
+                if calDSize(var_neighbor) == 0:
+                    print("DSIZE IS ZERO")
+                    return False, []
+    print("----")
+    return True, []

@@ -14,6 +14,12 @@ negColumns:list
 
 gameMapUpdate:list
 
+curr_posRows:list = []
+curr_negRows:list = []
+
+curr_posCols:list = []
+curr_negCols:list = []
+
 class HomeDir(enumerate):
     VERTICAL = "v"
     HORIZONTAL = "h"

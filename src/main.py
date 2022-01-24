@@ -1,3 +1,4 @@
+import time
 import CSP
 import info
 
@@ -18,6 +19,21 @@ info.gameMap = [[]]
 
 info.m = int(ms)
 info.n = int(ns)
+
+info.gameMapUpdate = []
+    
+for i in range(info.m):
+    info.gameMapUpdate.append([])
+    for j in range(info.n):
+        info.gameMapUpdate[i].append(0)
+
+for i in range(info.m):
+    info.curr_posRows.append(0)
+    info.curr_negRows.append(0)
+
+for j in range(info.n):
+    info.curr_posCols.append(0)
+    info.curr_negCols.append(0)
 
 for i in range(info.m):
     info.gameMap.append([])
@@ -47,7 +63,13 @@ for i in range(info.m):
 
 varsCount = cnt
 
+time_start = (time.time() * 1000) / 1000
+
 print(CSP.backTracking())
+
+time_end = (time.time() * 1000) / 1000
+
+print("It took", time_end - time_start)
 
 finalGameMap = []
 

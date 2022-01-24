@@ -1,0 +1,61 @@
+# print("<<<<<<>>>>>>", var["cnt"])
+    goingToChange = []
+    justForSureListChanged = []
+    count = 0
+    neighbors = getNeighbors(var)
+    # print("--------")
+    # print("I'm", var)
+    # print([n for n in neighbors if n["value"] == 0])
+    if type(var["value"]) is list:
+        # return True
+        for i in range(len(neighbors)):
+
+            if neighbors[i]["value"] == 0:
+                another_param = lambda : 1# if var["value"] == [1, 0] else 0
+                for val_index in [another_param(), 2]:
+                    if neighbors[i]["domain"][val_index] == 0:
+                        continue
+
+                    if not isConsistent(neighbors[i], neighbors[i]["domain"][val_index]):
+                        neighbors[i]["domain"][val_index] = 0
+                        count += 1
+                # if not isConsistent(neighbors[i], [1, 0]):
+                #     neighbors[i]["domain"][1] = 0
+                #     count += 1
+
+                # if not isConsistent(neighbors[i], [0, 1]):
+                #     neighbors[i]["domain"][0] = 0
+                #     count += 1             
+
+            # if neighbors[i]["domain"] == [0, 0, 0]:
+            #     return False, []
+            if all(val == 0 for val in neighbors[i]["domain"]):
+                # print("IT WAS ZERO")
+                return False, []
+            # print("M----")
+            # printLimited()
+            # print("M----")
+    # print("AFTER CHANGE:")
+    # print([n for n in neighbors if n["value"] == 0])
+    # print("--------")
+    # print("()()()()()()()()()()()()")
+    # print(var)
+    # printMap()
+    # print(goingToChange)
+    # print(justForSureListChanged)
+    # print(info.vars)
+    # print("()()()()()()()()()()()()")
+    # printLimited()
+    # print("<<<<<<>>>>>>", var["cnt"])
+    # print("MINE::", goingToChange, count)
+
+    # for v in neighbors:
+    #     if calDSize(v) == 0 and v["cnt"] != var["cnt"]:
+    #         # print("<<<<<<I'M FAILING>>>>>>", v["cnt"], var["cnt"])
+    #         # printMap()
+    #         # printStack()
+    #         # print("THIS ONE EMPTY::", v["domain"], v["cnt"], "VAR:", var["cnt"])
+    #         # print("<<<<<<I'M FAILING>>>>>>", v["cnt"], var["cnt"])
+    #         return False, goingToChange
+
+    return True, goingToChange
